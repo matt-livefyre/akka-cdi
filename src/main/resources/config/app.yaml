@@ -1,0 +1,74 @@
+#############################################
+#
+# USING THIS FILE:
+# - This is YAML; the YAML parser is strict. Syntax matters. You break it,
+#   you break the entire application.
+# - Document your work. The TODO annotations are TEMPORARY.
+# - Keep it organized, respect ordering.
+#
+# Types:
+# - See http://pyyaml.org/wiki/PyYAMLDocumentation#YAMLtagsandPythontypes
+# - !uri returns a urlparse.ParseResult
+#
+# Values:
+# - !required insists an overlay provide this value. It's something you just
+#   can't know as a developer.
+# - If the value is knowable for most environments, set it to a reasonable
+#   default as it would apply to most environments.
+# - If the value varies in each deployment, use !required.
+#
+#############################################
+
+
+environment:
+  type: !spec
+    description: Defines the environment type for this installation. This drives the selection
+      of env_{}.yaml in the overlay process.
+    type: !!str ""
+    value: !required "cluster.yaml"
+    examples: [dev, qa, staging, prod]
+
+app:
+  name: !spec
+    description: Application name
+    type: !!str ""
+    value: bsconsumer
+
+kafka_servers:
+  keystone: !spec
+    description: Kafka Cluster name
+    type: []
+    value: !required "cluster.yaml"
+
+mongo_servers:
+  social: !spec
+    description: List of server:port pairs in the replset.
+      Should be provided by the cluster.yaml
+    type: []
+    value: !required "cluster.yaml"
+    examples:
+    - localhost:27017
+
+akka_cdi:
+  counter: !spec
+    description: initial count value
+    type: !!int "0"
+    value: 5
+  port: !spec
+    description: web port
+    type: !!int "0"
+    value: 9999
+
+statsd:
+  host: !spec
+    description: IP/hostname of the statsd agent.
+    type: !!str ""
+    value: !required "cluster.yaml"
+  port: !spec
+    description: Port of the statsd agent (for UDP).
+    type: !!int "0"
+    value: 8125
+  sample_rate: !spec
+    description: sample rate (value between 0,1)
+    type: !!float "0"
+    value: 1.0

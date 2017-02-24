@@ -1,0 +1,8 @@
+kafka_servers:
+  keystone: ['localhost:9092']
+
+mongo_servers:
+  social: ['localhost:27017']
+
+statsd:
+  host: localhost
