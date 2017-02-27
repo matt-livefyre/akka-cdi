@@ -2,7 +2,7 @@ package com.livefyre.akka.cdi
 
 import javax.enterprise.inject.spi.BeanManager
 
-import akka.actor.{ActorSystem, Extension, Props}
+import akka.actor.{Actor, ActorSystem, Extension, Props}
 
 class CDIExtensionImpl extends Extension {
   var bm: BeanManager = _
@@ -12,8 +12,8 @@ class CDIExtensionImpl extends Extension {
     this
   }
 
-  def props(actorBeanName: String): Props = {
-    Props(classOf[ActorProducer], bm, actorBeanName)
+  def props(clazz: Class[_ <: Actor]): Props = {
+    Props(classOf[DependencyInjector], bm, clazz)
   }
 }
 

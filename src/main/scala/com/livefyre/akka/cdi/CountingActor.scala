@@ -1,5 +1,6 @@
 package com.livefyre.akka.cdi
 
+import javax.enterprise.context.Dependent
 import javax.inject.{Inject, Named}
 
 import akka.actor.{Actor, Props}

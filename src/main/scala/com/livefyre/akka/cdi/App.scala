@@ -5,6 +5,7 @@ import javax.inject.{Inject, Singleton}
 import javax.ws.rs.core.Response
 import javax.ws.rs.{GET, POST, Path}
 
+import akka.actor.ActorRef
 import akka.pattern.ask
 import akka.util.Timeout
 import com.livefyre.akka.cdi.CountingActor.{Get, Tick}
@@ -21,7 +22,8 @@ import scala.concurrent.duration._
 class App extends BaseService {
 
   @Inject
-  var actorSystemBean: ActorSystemBean = _
+  @UsingActor(typeOf = classOf[CountingActor])
+  var counter: ActorRef = _
 
   @Inject
   @ConfigValue("akka_cdi.port")
@@ -32,24 +34,6 @@ class App extends BaseService {
   @PostConstruct
   def start(): Unit = {
     web.start()
-
-//    val counter = actorSystemBean.counter
-//
-//    counter ! Tick
-//    counter ! Tick
-//    counter ! Tick
-//
-//    implicit val timeout = Timeout(5.seconds)
-//
-//    val result = (counter ? Get).mapTo[Int]
-//
-//    implicit val ec = actorSystemBean.dispatcher
-//
-//    result onComplete {
-//      case Success(success) => println(s"Got back $success")
-//      case Failure(failure) => println(s"Got an exception $failure")
-//    }
-
   }
 
   @PreDestroy
@@ -60,7 +44,7 @@ class App extends BaseService {
   @POST
   @Path("/tick")
   def postTick: Response = {
-    actorSystemBean.counter ! Tick
+    counter ! Tick
     Response.ok("Tick!").build()
   }
 
@@ -68,7 +52,7 @@ class App extends BaseService {
   @Path("/tick")
   def getTick: Response = {
     implicit val timeout = Timeout(5.seconds)
-    val future = actorSystemBean.counter ? Get
+    val future = counter ? Get
     val result = Await.result(future, timeout.duration).asInstanceOf[Int]
     Response.ok(s"Ticks -> $result").build()
   }
