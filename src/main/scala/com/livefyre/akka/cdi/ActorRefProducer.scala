@@ -1,7 +1,7 @@
 package com.livefyre.akka.cdi
 
-import javax.enterprise.inject.{Default, Produces}
-import javax.enterprise.inject.spi.{BeanManager, CDI, InjectionPoint}
+import javax.enterprise.inject.Produces
+import javax.enterprise.inject.spi.{CDI, InjectionPoint}
 
 import akka.actor.ActorRef
 
