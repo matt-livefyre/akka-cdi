@@ -12,8 +12,6 @@ class ActorSystemProducer {
 
   private val actorSystems = new ConcurrentHashMap[String, ActorSystem]().asScala
 
-  private implicit val bm = CDI.current().getBeanManager
-
   @Produces
   def getNamedActorSystem(ip: InjectionPoint): ActorSystem = {
     getActorSystem(ip.getAnnotated.getAnnotation(classOf[UsingActorSystem]).name())
@@ -28,7 +26,6 @@ class ActorSystemProducer {
             case Some(actorSystem) => actorSystem
             case None =>
               val system = ActorSystem(name)
-              CDIExtensionImpl(system)
               actorSystems.put(name, system)
               system
           }
