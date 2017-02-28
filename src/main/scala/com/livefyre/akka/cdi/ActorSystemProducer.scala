@@ -2,12 +2,14 @@ package com.livefyre.akka.cdi
 
 import java.util.concurrent.ConcurrentHashMap
 import javax.enterprise.inject.Produces
-import javax.enterprise.inject.spi.{CDI, InjectionPoint}
+import javax.enterprise.inject.spi.InjectionPoint
+import javax.inject.Singleton
 
 import akka.actor.ActorSystem
 
 import scala.collection.JavaConverters._
 
+@Singleton
 class ActorSystemProducer {
 
   private val actorSystems = new ConcurrentHashMap[String, ActorSystem]().asScala

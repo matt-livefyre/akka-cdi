@@ -22,8 +22,12 @@ import scala.concurrent.duration._
 class App extends BaseService {
 
   @Inject
-  @UsingActor(typeOf = classOf[CountingActor])
+  @UsingActor(typeOf = classOf[CountingActor], name = "counting")
   var counter: ActorRef = _
+
+  @Inject
+  @UsingActor(typeOf = classOf[CountingActor], name = "counting")
+  var counter2: ActorRef = _
 
   @Inject
   @ConfigValue("akka_cdi.port")
@@ -52,7 +56,7 @@ class App extends BaseService {
   @Path("/tick")
   def getTick: Response = {
     implicit val timeout = Timeout(5.seconds)
-    val future = counter ? Get
+    val future = counter2 ? Get
     val result = Await.result(future, timeout.duration).asInstanceOf[Int]
     Response.ok(s"Ticks -> $result").build()
   }

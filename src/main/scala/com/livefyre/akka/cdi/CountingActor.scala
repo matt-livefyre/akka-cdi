@@ -1,6 +1,5 @@
 package com.livefyre.akka.cdi
 
-import javax.enterprise.context.Dependent
 import javax.inject.{Inject, Named}
 
 import akka.actor.{Actor, Props}
@@ -13,7 +12,6 @@ object CountingActor {
   def props(countingService: CountingService): Props = Props(new CountingActor(countingService))
 }
 
-@Named
 class CountingActor @Inject() (countingService: CountingService) extends Actor {
   import CountingActor._
 

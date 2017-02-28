@@ -17,5 +17,8 @@ public @interface UsingActor {
     Class<? extends akka.actor.Actor> typeOf();
 
     @Nonbinding
+    String name();
+
+    @Nonbinding
     String actorSystem() default UsingActorSystem.AKKA_DEFAULT;
 }
