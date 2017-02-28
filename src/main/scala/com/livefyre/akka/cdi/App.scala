@@ -9,6 +9,7 @@ import akka.actor.ActorRef
 import akka.pattern.ask
 import akka.util.Timeout
 import com.livefyre.akka.cdi.CountingActor.{Get, Tick}
+import com.livefyre.akka.cdi.TickActor.Tock
 import com.livefyre.tools.cdi.ConfigValue
 import com.livefyre.tools.jersey.WebServer
 import com.livefyre.tools.service.BaseService
@@ -26,8 +27,8 @@ class App extends BaseService {
   var counter: ActorRef = _
 
   @Inject
-  @UsingActor(typeOf = classOf[CountingActor], name = "counting")
-  var counter2: ActorRef = _
+  @UsingActor(typeOf = classOf[TickActor], name = "tick")
+  var tick: ActorRef = _
 
   @Inject
   @ConfigValue("akka_cdi.port")
@@ -49,6 +50,7 @@ class App extends BaseService {
   @Path("/tick")
   def postTick: Response = {
     counter ! Tick
+    tick ! Tock
     Response.ok("Tick!").build()
   }
 
@@ -56,7 +58,7 @@ class App extends BaseService {
   @Path("/tick")
   def getTick: Response = {
     implicit val timeout = Timeout(5.seconds)
-    val future = counter2 ? Get
+    val future = counter ? Get
     val result = Await.result(future, timeout.duration).asInstanceOf[Int]
     Response.ok(s"Ticks -> $result").build()
   }

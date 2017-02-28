@@ -2,8 +2,8 @@ package com.livefyre.akka.cdi
 
 import java.util.concurrent.ConcurrentHashMap
 import javax.enterprise.inject.Produces
-import javax.enterprise.inject.spi.{CDI, InjectionPoint}
-import javax.inject.Singleton
+import javax.enterprise.inject.spi.{BeanManager, InjectionPoint}
+import javax.inject.{Inject, Singleton}
 
 import akka.actor.{Actor, ActorRef, ActorSystem}
 
@@ -12,7 +12,8 @@ import scala.collection.JavaConverters._
 @Singleton
 class ActorRefProducer {
 
-  private implicit val bm = CDI.current().getBeanManager
+  @Inject
+  implicit var bm: BeanManager = _
 
   private val actorRefs = new ConcurrentHashMap[String, ActorRef]().asScala
 

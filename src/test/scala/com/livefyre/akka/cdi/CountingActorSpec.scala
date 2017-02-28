@@ -21,7 +21,8 @@ class CountingActorSpec extends TestKit(ActorSystem("CountingActorSpec"))
   it should "tickticktick" in {
     val countingSvc = mock[CountingService]
     (countingSvc.increment _).expects(*).onCall({arg: Int => arg + 1}).repeated(3).times
-    val actor = system.actorOf(CountingActor.props(countingSvc))
+    val tickActor = system.actorOf(TickActor.props(countingSvc))
+    val actor = system.actorOf(CountingActor.props(tickActor))
     actor ! Tick
     actor ! Tick
     actor ! Tick
